@@ -4,41 +4,52 @@ public class List {
 
 	private final int MAXSIZE = 50;
 	private String[] list;
+	private int dataSize;
+	private int top;
 	
 	//default constructor
 	public List() {
 		list = new String[MAXSIZE];
+		dataSize = 0;
+		top = 0;
 	}
 	
 	//returns the content at a given position
 	public String get(int pos) {
+		if(pos <= dataSize)
 		return list[pos-1];
+		else
+			return null;
 	}
 	
 	//inserts a string at a given position (no overlap)
 	public void insert(String content, int pos) {
-		String[] temp = new String[list.length + MAXSIZE];
-		for(int i = 0; i < pos-2; i++) {
-			temp[i] = list[i];
+		if(pos < dataSize+1) {
+			for(int i = dataSize; i > pos; i--) {
+				list[i] = list[i-1];
+			}
+			list[pos-1] = content;
+			dataSize++;
 		}
-		temp[pos-1] = content;
-		for(int i = pos-1; i < list.length; i++) {
-			temp[i+1] = list[i];
+		else if(pos == dataSize+1) {
+			String[] temp = new String[list.length + MAXSIZE];
+			for(int i = top; i < dataSize; i++) {
+				list[i] = temp[i];
+			}
+			temp[pos-1] = content;
+			dataSize++;
+			list = temp;
 		}
-		list = temp;
 	}
 	
 	//returns the position at which a given string is at in the list
 	public int findString(String content) {
-		int pos = -1;
-		for(int i = 0; i < list.length; i++) {
+		int pos = 0;
+		for(int i = top; i < dataSize; i++) {
 			if(list[i].equals(content))
-				pos = i + 1;	
+				pos = i + 1;
 		}
-		if(pos == -1)
-			return 0;
-		else
-			return pos;
+		return pos;
 	}
 	
 	public String toString() {
